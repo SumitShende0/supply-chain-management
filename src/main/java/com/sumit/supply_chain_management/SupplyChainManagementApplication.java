@@ -8,6 +8,7 @@ public class SupplyChainManagementApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(SupplyChainManagementApplication.class, args);
+		System.out.println("Supply chain management running");
 	}
 
 }
