@@ -17,6 +17,7 @@ public class Customer {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer customerId;
     private String orgName;
+    private String contactPerson;
     private String contactNumber;
     private String officialEmail;
 
