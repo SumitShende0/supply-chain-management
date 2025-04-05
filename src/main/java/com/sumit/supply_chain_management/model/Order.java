@@ -20,7 +20,7 @@ public class Order {
     private String shippingAddress;
     private Integer quantityOrdered;
     private LocalDate dealerAssignmentDate;
-    private boolean isAccepted;
+    private Boolean isAccepted;
     private String deliveryDate;
 
 
