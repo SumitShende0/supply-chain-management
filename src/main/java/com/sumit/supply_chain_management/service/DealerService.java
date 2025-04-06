@@ -25,7 +25,7 @@ public class DealerService {
     }
 
     public List<DealerOrderDTO> pendingOrder(int dealerId) {
-        List<Order> orders = orderRepo.findByDealerDealerIdAndIsAcceptedIsNullDealerAssignmentDate(dealerId);
+        List<Order> orders = orderRepo.findByDealerDealerIdAndIsAcceptedIsNullDealerAssignmentDateAsc(dealerId);
         List<DealerOrderDTO> dtoList = new ArrayList<>();
 
         for(Order order: orders){
