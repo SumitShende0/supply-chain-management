@@ -25,9 +25,9 @@ public class AdminController {
         }
     }
 
-        @PutMapping("/orders/{orderId}/assign/{dealerId}")
-        public ResponseEntity<?> assignedOrders(@PathVariable int orderId, @PathVariable int dealerId) {
-            boolean updated = service.assignDealerToOrder(orderId, dealerId);
+    @PutMapping("/orders/{orderId}/assign/{dealerId}")
+    public ResponseEntity<?> assignedOrders(@PathVariable int orderId, @PathVariable int dealerId) {
+        boolean updated = service.assignDealerToOrder(orderId, dealerId);
 
             if (updated) {
                 return ResponseEntity.ok("Dealer assigned to order successfully.");
