@@ -9,4 +9,6 @@ public interface OrderRepository extends JpaRepository<Order, Integer> {
    public List<Order> findByDealerDealerIdAndIsAcceptedIsNullDealerAssignmentDateAsc(int dealerId);
 
    public List<Order> findByDealerDealerIdAndIsAcceptedIsTrueOrderByDeliveryDateAsc(int dealerId);
+
+   public List<Order> findByDealerAssignmentDateIsNullAndDealerIsNullOrderByOrderDateAsc();
 }

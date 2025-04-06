@@ -27,12 +27,22 @@ public class    DealerController {
     @GetMapping("/{dealerId}/pending-orders")
     public ResponseEntity<?> pendingOrders(@PathVariable int dealerId){
         List<DealerOrderDTO> pendingOrders = service.pendingOrder(dealerId);
-        return new ResponseEntity<>(pendingOrders, HttpStatus.OK);
+        if (pendingOrders.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }else {
+            return new ResponseEntity<>(pendingOrders, HttpStatus.OK);
+        }
     }
 
     @GetMapping("/{dealerId}/track-orders")
     public ResponseEntity<?> trackedOrders(@PathVariable int dealerId){
+
         List<DealerOrderDTO> trackOrders = service.trackedOrders(dealerId);
-        return new ResponseEntity<>(trackOrders, HttpStatus.OK);
+        if (trackOrders.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+        else {
+            return new ResponseEntity<>(trackOrders, HttpStatus.OK);
+        }
     }
 }
