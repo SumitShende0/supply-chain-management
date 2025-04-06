@@ -29,12 +29,11 @@ public class AdminController {
     public ResponseEntity<?> assignedOrders(@PathVariable int orderId, @PathVariable int dealerId) {
         boolean updated = service.assignDealerToOrder(orderId, dealerId);
 
-            if (updated) {
-                return ResponseEntity.ok("Dealer assigned to order successfully.");
-            } else {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Order or Dealer not found.");
-            }
-
+        if (updated) {
+            return ResponseEntity.ok("Dealer assigned to order successfully.");
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Order or Dealer not found.");
         }
+    }
 
 }
