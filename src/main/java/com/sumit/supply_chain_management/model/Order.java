@@ -12,6 +12,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
+@Table(name = "orders")
 public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -21,8 +22,8 @@ public class Order {
     private Integer quantityOrdered;
     private LocalDate dealerAssignmentDate;
     private Boolean isAccepted;
-    private String deliveryDate;
-
+    private LocalDate deliveryDate;
+    private Boolean isDispatched;
 
     @ManyToOne
     @JoinColumn(name = "customerId")

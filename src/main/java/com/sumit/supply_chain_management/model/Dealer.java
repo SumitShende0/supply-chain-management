@@ -23,6 +23,6 @@ public class Dealer {
     private String officeAddress;
     private String officialEmail;
 
-    @OneToMany(mappedBy = "assignedDealerName", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "dealer", cascade = CascadeType.ALL)
     private List<Order> orders = new ArrayList<>();
 }
