@@ -72,4 +72,34 @@ public class DealerService {
 
         return dtoList;
     }
+
+    public Order acceptOrder(int dealerId, int orderId) {
+        Order order = orderRepo.findById(orderId).orElse(null);
+        if (order != null && order.getDealer().getDealerId() == dealerId) {
+            order.setIsAccepted(true);
+            order.setDealerAssignmentDate(java.time.LocalDate.now());
+            return orderRepo.save(order);
+        }
+        return null;
+    }
+
+    public Order rejectOrder(int dealerId, int orderId) {
+        Order order = orderRepo.findById(orderId).orElse(null);
+        if (order != null && order.getDealer().getDealerId() == dealerId) {
+            order.setIsAccepted(false);
+            return orderRepo.save(order);
+        }
+        return null;
+    }
+
+    public Order dispatchOrder(int dealerId, int orderId, Order incomingOrder) {
+        Order order = orderRepo.findById(orderId).orElse(null);
+        if (order != null && order.getDealer().getDealerId() == dealerId) {
+            order.setIsDispatched(true);
+            order.setDeliveryDate(incomingOrder.getDeliveryDate());
+            order.setShippingAddress(incomingOrder.getShippingAddress());
+            return orderRepo.save(order);
+        }
+        return null;
+    }
 }

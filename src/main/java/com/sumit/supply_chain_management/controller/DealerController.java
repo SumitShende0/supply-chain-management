@@ -2,6 +2,7 @@ package com.sumit.supply_chain_management.controller;
 
 import com.sumit.supply_chain_management.dto.DealerOrderDTO;
 import com.sumit.supply_chain_management.model.Dealer;
+import com.sumit.supply_chain_management.model.Order;
 import com.sumit.supply_chain_management.service.DealerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -43,6 +44,36 @@ public class    DealerController {
         }
         else {
             return new ResponseEntity<>(trackOrders, HttpStatus.OK);
+        }
+    }
+
+    @PutMapping("/{dealerId}/pending-orders/{orderId}/accept")
+    public ResponseEntity<?> acceptOrder(@PathVariable int dealerId, @PathVariable int orderId){
+        Order order = service.acceptOrder(dealerId, orderId);
+        if (order == null) {
+            return ResponseEntity.notFound().build();
+        } else {
+            return new ResponseEntity<>(order, HttpStatus.OK);
+        }
+    }
+
+    @PutMapping("/{dealerId}/pending-orders/{orderId}/reject")
+    public ResponseEntity<?> rejectOrder(@PathVariable int dealerId, @PathVariable int orderId){
+        Order order = service.rejectOrder(dealerId, orderId);
+        if (order == null){
+            return ResponseEntity.notFound().build();
+        }else {
+            return new ResponseEntity<>(order, HttpStatus.OK);
+        }
+    }
+
+    @PutMapping("/{dealerId}/track-orders/{orderId}/dispatch")
+    public ResponseEntity<?> dispatchOrder(@PathVariable int dealerId, @PathVariable int orderId, @RequestBody Order incomingOrder){
+        Order order = service.dispatchOrder(dealerId, orderId, incomingOrder);
+        if (order == null) {
+            return ResponseEntity.notFound().build();
+        } else {
+            return new ResponseEntity<>(order, HttpStatus.OK);
         }
     }
 }
