@@ -3,6 +3,7 @@ package com.sumit.supply_chain_management.service;
 import com.sumit.supply_chain_management.model.Dealer;
 import com.sumit.supply_chain_management.model.Order;
 import com.sumit.supply_chain_management.model.Product;
+import com.sumit.supply_chain_management.repository.DealerRepository;
 import com.sumit.supply_chain_management.repository.OrderRepository;
 import com.sumit.supply_chain_management.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +19,9 @@ public class AdminService {
 
     @Autowired
     private ProductRepository productRepo;
+
+    @Autowired
+    private DealerRepository dealerRepo;
 
 
     public List<Order> getPendingOrders() {
@@ -44,5 +48,9 @@ public class AdminService {
         }
         // Save the product to the database
         return productRepo.save(product);
+    }
+
+    public List<Dealer> getAllDealers() {
+        return dealerRepo.findAll();
     }
 }
