@@ -25,7 +25,7 @@ public class AdminService {
 
 
     public List<Order> getPendingOrders() {
-        return orderRepo.findByDealerAssignmentDateIsNullAndDealerIsNullOrderByOrderDateAsc();
+        return orderRepo.findPendingOrders();
     }
 
     public boolean assignDealerToOrder(int orderId, int dealerId) {
