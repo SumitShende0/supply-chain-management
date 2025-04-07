@@ -2,7 +2,9 @@ package com.sumit.supply_chain_management.service;
 
 import com.sumit.supply_chain_management.model.Dealer;
 import com.sumit.supply_chain_management.model.Order;
+import com.sumit.supply_chain_management.model.Product;
 import com.sumit.supply_chain_management.repository.OrderRepository;
+import com.sumit.supply_chain_management.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,6 +15,9 @@ import java.util.List;
 public class AdminService {
     @Autowired
     private OrderRepository orderRepo;
+
+    @Autowired
+    private ProductRepository productRepo;
 
 
     public List<Order> getPendingOrders() {
@@ -30,5 +35,14 @@ public class AdminService {
             return true;
         }
         return false;
+    }
+
+    public Product addProduct(Product product) {
+        // Check if the product name is already taken
+        if (productRepo.existsByProductName(product.getProductName())) {
+            throw new IllegalArgumentException("Product name already exists");
+        }
+        // Save the product to the database
+        return productRepo.save(product);
     }
 }

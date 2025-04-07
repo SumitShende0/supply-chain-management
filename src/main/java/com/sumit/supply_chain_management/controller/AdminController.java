@@ -1,6 +1,7 @@
 package com.sumit.supply_chain_management.controller;
 
 import com.sumit.supply_chain_management.model.Order;
+import com.sumit.supply_chain_management.model.Product;
 import com.sumit.supply_chain_management.service.AdminService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -35,5 +36,12 @@ public class AdminController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Order or Dealer not found.");
         }
     }
+
+    @PostMapping("/product")
+    public ResponseEntity<?> addProduct(@RequestBody Product product) {
+        Product savedProduct = service.addProduct(product);
+        return ResponseEntity.status(HttpStatus.CREATED).body(savedProduct);
+    }
+
 
 }
