@@ -11,6 +11,6 @@ public interface OrderRepository extends JpaRepository<Order, Integer> {
 
    public List<Order> findByDealerDealerIdAndIsAcceptedIsTrueOrderByDeliveryDateAsc(int dealerId);
 
-   @Query("SELECT o FROM Order o WHERE o.dealerAssignmentDate IS NULL AND (o.dealer IS NULL OR o.dealer.active = false) ORDER BY o.orderDate ASC")
-   List<Order> findPendingOrders();
+   @Query("SELECT o FROM Order o WHERE o.dealer IS NULL AND (o.isAccepted = false OR o.isAccepted IS NULL) ORDER BY o.orderDate ASC")
+   public List<Order> findPendingOrders();
 }

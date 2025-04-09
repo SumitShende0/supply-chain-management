@@ -75,7 +75,7 @@ public class DealerService {
 
     public Order acceptOrder(int dealerId, int orderId) {
         Order order = orderRepo.findById(orderId).orElse(null);
-        if (order != null && order.getDealer().getDealerId() == dealerId) {
+        if (order != null && order.getDealer() != null && order.getDealer().getDealerId() == dealerId) {
             order.setIsAccepted(true);
             order.setDealerAssignmentDate(java.time.LocalDate.now());
             return orderRepo.save(order);
@@ -87,6 +87,8 @@ public class DealerService {
         Order order = orderRepo.findById(orderId).orElse(null);
         if (order != null && order.getDealer().getDealerId() == dealerId) {
             order.setIsAccepted(false);
+            order.setDealer(null);
+            order.setDealerAssignmentDate(null);
             return orderRepo.save(order);
         }
         return null;
