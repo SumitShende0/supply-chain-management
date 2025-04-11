@@ -23,6 +23,9 @@ public class Customer {
     private String contactNumber;
     private String officialEmail;
 
+    @Transient
+    private String password;
+
     @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL)
     @JsonIgnore
     private List<Order> orders =  new ArrayList<>();
