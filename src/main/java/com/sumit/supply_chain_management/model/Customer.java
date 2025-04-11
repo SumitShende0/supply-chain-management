@@ -1,6 +1,7 @@
 package com.sumit.supply_chain_management.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -25,4 +26,9 @@ public class Customer {
     @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL)
     @JsonIgnore
     private List<Order> orders =  new ArrayList<>();
+
+    @OneToOne
+    @JsonIgnoreProperties({"userPassword"})
+    @JoinColumn(name = "userId")
+    private User user;
 }
