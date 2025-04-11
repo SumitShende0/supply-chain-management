@@ -3,7 +3,9 @@ package com.sumit.supply_chain_management.controller;
 import com.sumit.supply_chain_management.dto.DealerOrderDTO;
 import com.sumit.supply_chain_management.model.Dealer;
 import com.sumit.supply_chain_management.model.Order;
+import com.sumit.supply_chain_management.model.User;
 import com.sumit.supply_chain_management.service.DealerService;
+import com.sumit.supply_chain_management.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,14 +16,29 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/dealer")
 @CrossOrigin(origins = "*")
-public class    DealerController {
+public class DealerController {
 
     @Autowired
     DealerService service;
 
+    @Autowired
+    UserService userService;
+
     @PostMapping("/register")
     public ResponseEntity<Dealer> registerDealer(@RequestBody Dealer dealer){
-        Dealer savedDealer = service.registerDealer(dealer);
+        if (userService.existsByEmail(dealer.getOfficialEmail())) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(null);
+        }
+
+        User user = new User();
+        user.setUserEmail(dealer.getOfficialEmail());
+        user.setUserPassword(dealer.getPassword());
+        user.setUserRole("DEALER");
+
+        user.setDealer(dealer);
+        dealer.setUser(user);
+
+        Dealer savedDealer = service.registerDealer(dealer);// save both dealer and user
         return new ResponseEntity<>(savedDealer, HttpStatus.CREATED);
     }
 
