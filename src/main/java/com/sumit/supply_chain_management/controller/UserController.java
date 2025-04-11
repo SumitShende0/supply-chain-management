@@ -1,6 +1,7 @@
 package com.sumit.supply_chain_management.controller;
 
 import com.sumit.supply_chain_management.model.User;
+import com.sumit.supply_chain_management.service.JwtService;
 import com.sumit.supply_chain_management.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -22,6 +23,9 @@ public class UserController {
 
     @Autowired
     UserService userService;
+
+    @Autowired
+    JwtService jwtService;
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody User userRequest){
