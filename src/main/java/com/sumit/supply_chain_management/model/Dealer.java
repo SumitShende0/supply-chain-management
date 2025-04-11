@@ -32,7 +32,7 @@ public class Dealer {
     @JsonIgnore
     private List<Order> orders = new ArrayList<>();
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "userId")
     @JsonIgnoreProperties({"userPassword"})
     private User user;

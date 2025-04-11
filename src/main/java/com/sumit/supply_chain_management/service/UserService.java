@@ -18,6 +18,9 @@ public class UserService {
         return userRepo.existsByUserEmail(officialEmail);
     }
 
+    public String encodePassword(String password) {
+        return encoder.encode(password);
+    }
 
     public User saveUser(User user) {
         user.setUserPassword(encoder.encode(user.getUserPassword()));

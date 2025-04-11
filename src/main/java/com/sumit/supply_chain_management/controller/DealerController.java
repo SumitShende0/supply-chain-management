@@ -5,13 +5,16 @@ import com.sumit.supply_chain_management.model.Dealer;
 import com.sumit.supply_chain_management.model.Order;
 import com.sumit.supply_chain_management.model.User;
 import com.sumit.supply_chain_management.service.DealerService;
+import com.sumit.supply_chain_management.service.JwtService;
 import com.sumit.supply_chain_management.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/dealer")
@@ -24,22 +27,39 @@ public class DealerController {
     @Autowired
     UserService userService;
 
+    @Autowired
+    JwtService jwtService;
+
     @PostMapping("/register")
-    public ResponseEntity<Dealer> registerDealer(@RequestBody Dealer dealer){
+    public ResponseEntity<?> registerDealer(@RequestBody Dealer dealer){
         if (userService.existsByEmail(dealer.getOfficialEmail())) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body(null);
         }
 
         User user = new User();
         user.setUserEmail(dealer.getOfficialEmail());
-        user.setUserPassword(dealer.getPassword());
+        user.setUserPassword(userService.encodePassword(dealer.getPassword()));
         user.setUserRole("DEALER");
 
-        user.setDealer(dealer);
         dealer.setUser(user);
 
         Dealer savedDealer = service.registerDealer(dealer);// save both dealer and user
-        return new ResponseEntity<>(savedDealer, HttpStatus.CREATED);
+        User savedUser = savedDealer.getUser();
+        // Generate token after saving
+        String jwt = jwtService.generateToken(
+                savedUser.getUserId(),
+                savedUser.getUserEmail(),
+                savedUser.getUserRole()
+        );
+
+        // Return same response as login
+        Map<String, Object> response = new HashMap<>();
+        response.put("token", jwt);
+        response.put("userId", savedUser.getUserId());
+        response.put("email", savedUser.getUserEmail());
+        response.put("role", savedUser.getUserRole());
+
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping("/{dealerId}/pending-orders")
