@@ -11,4 +11,4 @@ public class SupplyChainManagementApplication {
 		System.out.println("Supply chain management running");
 	}
 
-}
+}	

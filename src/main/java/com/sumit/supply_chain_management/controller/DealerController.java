@@ -33,7 +33,7 @@ public class DealerController {
     @PostMapping("/register")
     public ResponseEntity<?> registerDealer(@RequestBody Dealer dealer){
         if (userService.existsByEmail(dealer.getOfficialEmail())) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(null);
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(Map.of("message", "Email already registered"));
         }
 
         User user = new User();
