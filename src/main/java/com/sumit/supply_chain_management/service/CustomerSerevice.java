@@ -28,15 +28,16 @@ public class CustomerSerevice {
 
 
     public Order placeOrder(Order order) {
+
          order.setOrderDate(LocalDate.now());
          return  orderRepo.save(order);
     }
 
     public List<Product> searchProduct(String query) {
-        List<Product> products = productRepo.findByProductNameContainingIgnoreCase(query);
-        if (products.isEmpty()) {
-            throw new RuntimeException("No products found");
-        }
-        return products;
+        return productRepo.findByProductNameContainingIgnoreCase(query);
+    }
+
+    public Customer getCustomerByUserUserId(Integer userId) {
+        return customerRepo.findByUserUserId(userId);
     }
 }
