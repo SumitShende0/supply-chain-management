@@ -24,7 +24,9 @@ public class AdminController {
     public ResponseEntity<?> pendingOrders() {
         List<Order> orders = service.getPendingOrders();
         if (orders.isEmpty()) {
-            return ResponseEntity.noContent().build();
+            Map<String, String> response = new HashMap<>();
+            response.put("message", "No pending orders found.");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
         } else {
             return ResponseEntity.ok(orders);
         }

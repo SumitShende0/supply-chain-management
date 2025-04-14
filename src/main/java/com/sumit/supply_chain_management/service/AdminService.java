@@ -25,7 +25,7 @@ public class AdminService {
 
 
     public List<Order> getPendingOrders() {
-        return orderRepo.findPendingOrders();
+        return orderRepo.findByIsDispatchedFalse();
     }
 
     public boolean assignDealerToOrder(int orderId, int dealerId) {

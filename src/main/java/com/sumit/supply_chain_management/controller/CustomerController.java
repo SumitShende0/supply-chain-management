@@ -86,6 +86,7 @@ public class CustomerController {
 
         order.setCustomer(customer);
         order.setProduct(product);
+        order.setIsDispatched(false);
         Order placedOrder = service.placeOrder(order);
         return  new ResponseEntity<>(placedOrder, HttpStatus.CREATED);
     }
