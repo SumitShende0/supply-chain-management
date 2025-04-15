@@ -31,8 +31,13 @@ public class DealerService {
         for(Order order: orders){
             DealerOrderDTO orderDTO = new DealerOrderDTO();
             orderDTO.setOrderId(order.getOrderId());
-            orderDTO.setDeliveryDate(order.getDeliveryDate().toString());
-            orderDTO.setCustomerName(order.getCustomer().getContactNumber());
+            orderDTO.setDeliveryDate(order.getDeliveryDate() != null
+                    ? order.getDealerAssignmentDate().toString()
+                    : null);
+            orderDTO.setOrderDate(order.getOrderDate() != null
+                    ? order.getDealerAssignmentDate().toString()
+                    : null);
+            orderDTO.setCustomerName(order.getCustomer().getContactPerson());
             orderDTO.setProductName(order.getProduct().getProductName());
             orderDTO.setQuantity(order.getQuantityOrdered());
             orderDTO.setShippingAddress(order.getShippingAddress());
@@ -56,14 +61,16 @@ public class DealerService {
         for(Order order: orders){
             DealerOrderDTO orderDTO = new DealerOrderDTO();
             orderDTO.setOrderId(order.getOrderId());
-            orderDTO.setDeliveryDate(order.getDeliveryDate().toString());
-            orderDTO.setCustomerName(order.getCustomer().getContactNumber());
+            orderDTO.setDeliveryDate(order.getDeliveryDate() != null ?
+                    order.getDeliveryDate().toString()
+                    : null);
+            orderDTO.setCustomerName(order.getCustomer().getContactPerson());
             orderDTO.setProductName(order.getProduct().getProductName());
             orderDTO.setQuantity(order.getQuantityOrdered());
             orderDTO.setShippingAddress(order.getShippingAddress());
             orderDTO.setIsAccepted(order.getIsAccepted());
-            orderDTO.setDealerAssignmentDate(order.getDealerAssignmentDate() != null
-                    ? order.getDealerAssignmentDate().toString()
+            orderDTO.setOrderDate(order.getOrderDate() != null
+                    ? order.getOrderDate().toString()
                     : null);
             orderDTO.setIsDispatched(order.getIsDispatched());
 
@@ -75,7 +82,10 @@ public class DealerService {
 
     public Order acceptOrder(int dealerId, int orderId) {
         Order order = orderRepo.findById(orderId).orElse(null);
-        if (order != null && order.getDealer() != null && order.getDealer().getDealerId() == dealerId) {
+        if(order == null) {
+            return null;
+        }
+        if (order.getDealer() != null && order.getDealer().getDealerId() == dealerId) {
             order.setIsAccepted(true);
             order.setDealerAssignmentDate(java.time.LocalDate.now());
             return orderRepo.save(order);
@@ -85,7 +95,10 @@ public class DealerService {
 
     public Order rejectOrder(int dealerId, int orderId) {
         Order order = orderRepo.findById(orderId).orElse(null);
-        if (order != null && order.getDealer().getDealerId() == dealerId) {
+        if (order == null){
+            return null;
+        }
+        if (order.getDealer() != null && order.getDealer().getDealerId() == dealerId) {
             order.setIsAccepted(false);
             order.setDealer(null);
             order.setDealerAssignmentDate(null);
@@ -99,9 +112,12 @@ public class DealerService {
         if (order != null && order.getDealer().getDealerId() == dealerId) {
             order.setIsDispatched(true);
             order.setDeliveryDate(incomingOrder.getDeliveryDate());
-            order.setShippingAddress(incomingOrder.getShippingAddress());
             return orderRepo.save(order);
         }
         return null;
+    }
+
+    public Dealer getDealerByUserId(Integer userId) {
+        return dealerRepo.findByUserUserId(userId);
     }
 }

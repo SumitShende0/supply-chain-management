@@ -35,6 +35,7 @@ public class AdminService {
             dealer.setDealerId(dealerId);
             order.setDealer(dealer);
             order.setDealerAssignmentDate(LocalDate.now());
+            order.setIsAccepted(null);
             orderRepo.save(order);
             return true;
         }

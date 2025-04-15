@@ -97,4 +97,19 @@ public class CustomerController {
         return new ResponseEntity<>(products, HttpStatus.OK);
     }
 
+    @GetMapping("/orders")
+    public ResponseEntity<List<Order>> getOrders(Principal principal) {
+        String email = principal.getName();
+        User user = userService.getUserByEmail(email);
+        if (user == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+        }
+        Customer customer = service.getCustomerByUserUserId(user.getUserId());
+        if (customer == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+        }
+        List<Order> orders = service.getOrdersByCustomer(customer);
+        return new ResponseEntity<>(orders, HttpStatus.OK);
+    }
+
 }

@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 public class DealerOrderDTO {
     private Integer orderId;
     private String deliveryDate;
+    private String orderDate;
     private String customerName;
     private String productName;
     private Integer quantity;

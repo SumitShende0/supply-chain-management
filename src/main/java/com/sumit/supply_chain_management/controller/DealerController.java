@@ -12,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -62,53 +63,77 @@ public class DealerController {
         return ResponseEntity.ok(response);
     }
 
-    @GetMapping("/{dealerId}/pending-orders")
-    public ResponseEntity<?> pendingOrders(@PathVariable int dealerId){
-        List<DealerOrderDTO> pendingOrders = service.pendingOrder(dealerId);
+    @GetMapping("/pending-orders")
+    public ResponseEntity<?> pendingOrders(Principal principal){
+        String email = principal.getName();
+        User user = userService.getUserByEmail(email);
+
+        Dealer dealer = service.getDealerByUserId(user.getUserId());
+
+        List<DealerOrderDTO> pendingOrders = service.pendingOrder(dealer.getDealerId());
         if (pendingOrders.isEmpty()) {
-            return ResponseEntity.noContent().build();
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("message", "No pending orders found"));
         }else {
             return new ResponseEntity<>(pendingOrders, HttpStatus.OK);
         }
     }
 
-    @GetMapping("/{dealerId}/track-orders")
-    public ResponseEntity<?> trackedOrders(@PathVariable int dealerId){
+    @GetMapping("/track-orders")
+    public ResponseEntity<?> trackedOrders(Principal principal){
+        String email = principal.getName();
+        User user = userService.getUserByEmail(email);
 
-        List<DealerOrderDTO> trackOrders = service.trackedOrders(dealerId);
+        Dealer dealer = service.getDealerByUserId(user.getUserId());
+
+        List<DealerOrderDTO> trackOrders = service.trackedOrders(dealer.getDealerId());
         if (trackOrders.isEmpty()) {
-            return ResponseEntity.noContent().build();
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("message", "No pending orders found"));
         }
         else {
             return new ResponseEntity<>(trackOrders, HttpStatus.OK);
         }
     }
 
-    @PutMapping("/{dealerId}/pending-orders/{orderId}/accept")
-    public ResponseEntity<?> acceptOrder(@PathVariable int dealerId, @PathVariable int orderId){
+    @PutMapping("/pending-orders/{orderId}/accept")
+    public ResponseEntity<?> acceptOrder(@PathVariable int orderId, Principal principal){
+        String email= principal.getName();
+        User user = userService.getUserByEmail(email);
+
+        Dealer dealer = service.getDealerByUserId(user.getUserId());
+        int dealerId = dealer.getDealerId();
         Order order = service.acceptOrder(dealerId, orderId);
         if (order == null) {
-            return ResponseEntity.notFound().build();
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("message", "Order not found"));
         } else {
             return new ResponseEntity<>(order, HttpStatus.OK);
         }
     }
 
-    @PutMapping("/{dealerId}/pending-orders/{orderId}/reject")
-    public ResponseEntity<?> rejectOrder(@PathVariable int dealerId, @PathVariable int orderId){
+    @PutMapping("/pending-orders/{orderId}/reject")
+    public ResponseEntity<?> rejectOrder(@PathVariable int orderId, Principal principal){
+        String email= principal.getName();
+        User user = userService.getUserByEmail(email);
+
+        Dealer dealer = service.getDealerByUserId(user.getUserId());
+        int dealerId = dealer.getDealerId();
         Order order = service.rejectOrder(dealerId, orderId);
         if (order == null){
-            return ResponseEntity.notFound().build();
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("message", "Order not found"));
         }else {
             return new ResponseEntity<>(order, HttpStatus.OK);
         }
     }
 
-    @PutMapping("/{dealerId}/track-orders/{orderId}/dispatch")
-    public ResponseEntity<?> dispatchOrder(@PathVariable int dealerId, @PathVariable int orderId, @RequestBody Order incomingOrder){
+    @PutMapping("/track-orders/{orderId}/dispatch")
+    public ResponseEntity<?> dispatchOrder(Principal principal,@PathVariable int orderId, @RequestBody Order incomingOrder){
+        String email= principal.getName();
+        User user = userService.getUserByEmail(email);
+
+        Dealer dealer = service.getDealerByUserId(user.getUserId());
+        int dealerId = dealer.getDealerId();
         Order order = service.dispatchOrder(dealerId, orderId, incomingOrder);
         if (order == null) {
-            return ResponseEntity.notFound().build();
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("message", "Order not found"));
         } else {
             return new ResponseEntity<>(order, HttpStatus.OK);
         }

@@ -40,4 +40,8 @@ public class CustomerSerevice {
     public Customer getCustomerByUserUserId(Integer userId) {
         return customerRepo.findByUserUserId(userId);
     }
+
+    public List<Order> getOrdersByCustomer(Customer customer) {
+        return orderRepo.findByCustomer(customer);
+    }
 }
