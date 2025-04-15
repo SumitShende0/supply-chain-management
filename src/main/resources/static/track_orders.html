@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0"
+    />
+    <title>Track Orders</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="css/style.css"
+    />
+  </head>
+  <body>
+    <div class="page-container">
+      <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container-fluid px-4">
+          <div class="navbar-container">
+            <a
+              class="navbar-brand"
+              href="index.html"
+              >Supply Chain</a
+            >
+            <div class="d-flex align-items-center">
+              <!-- Theme toggle moved here -->
+              <button
+                class="theme-toggle me-2"
+                onclick="toggleTheme()"
+                aria-label="Toggle theme"
+              >
+                <i
+                  id="themeToggleIcon"
+                  class="bi bi-sun"
+                ></i>
+              </button>
+
+              <button
+                class="navbar-toggler"
+                type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#navbarNav"
+                aria-label="Toggle navigation"
+              >
+                <span class="navbar-toggler-icon"></span>
+              </button>
+            </div>
+          </div>
+
+          <div
+            class="collapse navbar-collapse"
+            id="navbarNav"
+          >
+            <ul class="navbar-nav ms-auto">
+              <li class="nav-item">
+                <a
+                  class="nav-link"
+                  href="index.html"
+                  >Home</a
+                >
+              </li>
+              <li class="nav-item">
+                <a
+                  class="nav-link"
+                  href="pending_orders.html"
+                  >Pending</a
+                >
+              </li>
+              <li class="nav-item">
+                <button
+                  type="button"
+                  class="btn btn-danger"
+                  data-bs-toggle="modal"
+                  data-bs-target="#logoutButton"
+                >
+                  Logout
+                </button>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </nav>
+
+      <div class="container mt-5">
+        <h2 class="text-center">List Of Track Orders</h2>
+      </div>
+      <p
+        id="message"
+        class="text-center mt-3 fw-bold"
+      ></p>
+
+      <!-- //Logout modal button -->
+      <div
+        class="modal fade"
+        id="logoutButton"
+        tabindex="-1"
+        aria-labelledby="logoutButtonLabel"
+        aria-hidden="true"
+      >
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h1
+                class="modal-title fs-5 text-danger"
+                id="logoutButtonLabel"
+              >
+                Warning
+              </h1>
+              <button
+                type="button"
+                class="btn-close"
+                data-bs-dismiss="modal"
+                aria-label="Close"
+              ></button>
+            </div>
+            <div class="modal-body">Do you want to logout?</div>
+            <div class="modal-footer">
+              <button
+                type="button"
+                class="btn btn-secondary"
+                data-bs-dismiss="modal"
+              >
+                No
+              </button>
+              <button
+                type="button"
+                class="btn btn-danger"
+                id="logoutConfirmButton"
+                onclick="
+                  localStorage.removeItem('jwtToken');
+                  window.location.href = 'login.html'"
+              >
+                Yes
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <footer class="footer bg-dark text-white text-center py-3">
+        <p>&copy; 2025 Supply Chain Management. All rights reserved.</p>
+      </footer>
+    </div>
+
+    <!-- script for form submission -->
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        if (
+          !isLoggedIn() ||
+          (getUserRoleFromToken() &&
+            getUserRoleFromToken().toLowerCase() !== "dealer")
+        ) {
+          window.location.href = "login.html";
+        }
+
+        fetchPendingOrders();
+      });
+
+      function isLoggedIn() {
+        const token = localStorage.getItem("jwtToken");
+        return !!token;
+      }
+
+      function getUserRoleFromToken() {
+        const token = localStorage.getItem("jwtToken");
+        if (!token) return null;
+
+        const payload = JSON.parse(atob(token.split(".")[1])); // Decode the JWT payload
+        return payload.role; // Return the role from the token payload
+      }
+
+      function getJwtToken() {
+        return localStorage.getItem("jwtToken");
+      }
+
+      function fetchPendingOrders() {
+        const token = getJwtToken();
+        const messageEl = document.getElementById("message");
+        messageEl.textContent = ""; // Clear previous messages
+
+        fetch("http://localhost:8080/api/dealer/track-orders", {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        })
+          .then((res) =>
+            res.json().then((data) => {
+              if (!res.ok) {
+                throw new Error(data.message || "Failed to fetch orders");
+              }
+              return data;
+            })
+          )
+          .then((data) => {
+            displayOrders(data);
+          })
+          .catch((err) => {
+            console.error("Error:", err);
+            messageEl.textContent = err.message;
+            messageEl.className = "text-danger text-center mt-3 fw-bold";
+          });
+      }
+
+      function displayOrders(orders) {
+        const container = document.querySelector(".container.mt-5");
+        const wrapper = document.createElement("div");
+        wrapper.className = "table-responsive mt-4";
+
+        const table = document.createElement("table");
+        table.className = "table table-striped mt-4 ";
+        table.innerHTML = `
+          <thead>
+            <tr>
+              <th>Sr. No</th>
+              <th>Order Date</th>
+              <th>Customer Details</th>
+              <th>Product Ordered</th>
+              <th>Quantity</th>
+              <th>Delivery Address</th>
+              <th>Dispatched</th>
+              <th>Expected Delivery Date</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${orders
+              .map(
+                (order, index) => `
+              <tr>
+                <td>${index + 1}</td>
+                <td>${order.orderDate}</td>
+                <td>${order.customerName}</td>
+                <td>${order.productName}</td>
+                <td>${order.quantity}</td>
+                <td>${order.shippingAddress}</td>
+                <td>
+                        ${
+                          order.isDispatched
+                            ? "Dispatched"
+                            : `<input class="form-check-input" type="checkbox" id="dispatched-${order.orderId}" onchange="dispatchOrder(${order.orderId})" disabled"
+                         />`
+                        }
+                        </td>
+                        <td>
+                        ${
+                          order.deliveryDate
+                            ? order.deliveryDate
+                            : `<input class="form-control form-control-sm" type="date" id="expectedDelivery-${order.orderId}"
+                            onchange="enableCheckbox(${order.orderId})" />`
+                        }
+                        </td>
+              </tr>
+            `
+              )
+              .join("")}
+          </tbody>
+        `;
+        wrapper.appendChild(table);
+        container.appendChild(wrapper);
+      }
+
+      //enable checkbox if date is selected
+      function enableCheckbox(orderId) {
+        const dateInput = document.getElementById(
+          `expectedDelivery-${orderId}`
+        );
+        const checkbox = document.getElementById(`dispatched-${orderId}`);
+
+        // Get today's date in YYYY-MM-DD format
+        const today = new Date().toISOString().split("T")[0];
+
+        // Check if the selected date is earlier than today
+        if (dateInput.value && dateInput.value < today) {
+          alert("You cannot select a date before today.");
+          checkbox.checked = false; // Uncheck the checkbox
+          dateInput.value = ""; // Reset the date input to an empty value
+          checkbox.disabled = true; // Disable the checkbox
+        } else {
+          checkbox.disabled = !dateInput.value; // Enable checkbox if date is selected
+        }
+      }
+
+      function dispatchOrder(orderId) {
+        const token = getJwtToken();
+        const dispatchedCheckbox = document.querySelector(
+          `#dispatched-${orderId}`
+        );
+        const expectedDateInput = document.querySelector(
+          `#expectedDelivery-${orderId}`
+        );
+
+        const isChecked = dispatchedCheckbox?.checked;
+        const expectedDeliveryDate = expectedDateInput?.value;
+
+        if (!isChecked || !expectedDeliveryDate) {
+          alert("Please select an expected delivery date.");
+          dispatchedCheckbox.checked = false; // Uncheck the checkbox
+          return;
+        }
+        dispatchedCheckbox.disabled = true; // Disable the checkbox after dispatching
+        expectedDateInput.disabled = true; // Disable the date input after dispatching
+
+        const payload = {
+          deliveryDate: expectedDeliveryDate,
+          isDispatched: true,
+        };
+
+        fetch(
+          `http://localhost:8080/api/dealer/track-orders/${orderId}/dispatch`,
+          {
+            method: "PUT",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+            body: JSON.stringify(payload),
+          }
+        )
+          .then((res) =>
+            res.json().then((data) => {
+              if (!res.ok) {
+                throw new Error(data.message || "Failed to dispatch order");
+              }
+              return data;
+            })
+          )
+          .then(() => {
+            alert("Order dispatched successfully!");
+            window.location.reload();
+          })
+          .catch((err) => {
+            console.error("Error:", err);
+            alert(err.message);
+          });
+      }
+    </script>
+
+    <script src="js/theme-toggle.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  </body>
+</html>

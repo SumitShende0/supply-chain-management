@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0"
+    />
+    <title>Supply Chain Management</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <!-- Bootstrap Icons -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css"
+      rel="stylesheet"
+    />
+
+    <link
+      rel="stylesheet"
+      href="css/style.css"
+    />
+  </head>
+  <body>
+    <div class="page-container">
+      <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container-fluid px-4">
+          <div class="navbar-container">
+            <a
+              class="navbar-brand"
+              href="#"
+              >Supply Chain</a
+            >
+            <div class="d-flex align-items-center">
+              <!-- Theme toggle moved here -->
+              <button
+                class="theme-toggle me-2"
+                onclick="toggleTheme()"
+                aria-label="Toggle theme"
+              >
+                <i
+                  id="themeToggleIcon"
+                  class="bi bi-sun"
+                ></i>
+              </button>
+
+              <button
+                class="navbar-toggler"
+                type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#navbarNav"
+                aria-label="Toggle navigation"
+              >
+                <span class="navbar-toggler-icon"></span>
+              </button>
+            </div>
+          </div>
+
+          <div
+            class="collapse navbar-collapse"
+            id="navbarNav"
+          >
+            <ul class="navbar-nav ms-auto">
+              <li class="nav-item">
+                <a
+                  class="nav-link"
+                  href="index.html"
+                  >Home</a
+                >
+              </li>
+              <li class="nav-item">
+                <a
+                  class="nav-link"
+                  href="login.html"
+                  >Login</a
+                >
+              </li>
+              <li class="nav-item dropdown">
+                <a
+                  class="nav-link dropdown-toggle"
+                  href="#"
+                  id="registerDropdown"
+                  role="button"
+                  data-bs-toggle="dropdown"
+                  >Register</a
+                >
+                <ul class="dropdown-menu dropdown-menu-end">
+                  <li>
+                    <a
+                      class="dropdown-item"
+                      href="register_buyer.html"
+                      >Register as Buyer</a
+                    >
+                  </li>
+                  <li>
+                    <a
+                      class="dropdown-item"
+                      href="register_dealer.html"
+                      >Register as Dealer</a
+                    >
+                  </li>
+                </ul>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </nav>
+
+      <div class="content-wrap">
+        <header class="bg-primary text-white text-center py-5">
+          <div class="container">
+            <h1>Welcome to Supply Chain Management</h1>
+            <p class="lead">
+              Streamlining product supply for buyers, admins, and dealers
+            </p>
+            <div class="container">
+              <div class="row justify-content-center">
+                <div class="col-md-auto d-grid d-md-flex gap-3">
+                  <a
+                    href="register_buyer.html"
+                    class="btn btn-light btn-lg"
+                    >Get Started as Buyer</a
+                  >
+                  <a
+                    href="register_dealer.html"
+                    class="btn btn-light btn-lg"
+                    >Get Started as Dealer</a
+                  >
+                  <a
+                    href="login.html"
+                    class="btn btn-warning btn-lg d-flex align-items-center justify-content-center"
+                    >Login</a
+                  >
+                </div>
+              </div>
+            </div>
+          </div>
+        </header>
+
+        <section class="container text-center my-5">
+          <h2>What is Supply Chain Management?</h2>
+          <p>
+            Supply Chain Management (SCM) is the process of managing the flow of
+            goods and services, including all processes that transform raw
+            materials into final products. It involves the active streamlining
+            of a business's supply-side activities to maximize customer value
+            and gain a competitive advantage in the marketplace.
+          </p>
+          <p>
+            SCM encompasses everything from production, procurement, logistics,
+            and distribution to ensuring seamless coordination between
+            suppliers, manufacturers, and buyers.
+          </p>
+        </section>
+
+        <section class="container text-center my-5">
+          <div class="row">
+            <div class="col-md-4">
+              <h3>For Buyers</h3>
+              <p>Find and purchase products seamlessly.</p>
+            </div>
+            <div class="col-md-4">
+              <h3>For Admins</h3>
+              <p>Manage inventory and oversee transactions.</p>
+            </div>
+            <div class="col-md-4">
+              <h3>For Dealers</h3>
+              <p>Fulfill product demands efficiently.</p>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <footer class="footer bg-dark text-white text-center py-3">
+        <p>&copy; 2025 Supply Chain Management. All rights reserved.</p>
+      </footer>
+    </div>
+
+    <script src="js/theme-toggle.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  </body>
+</html>
